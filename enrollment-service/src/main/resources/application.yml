@@ -1,0 +1,86 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: enrollment-service
+
+  datasource:
+    url: jdbc:h2:mem:enrollment_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop      # use "validate" plus Flyway/Liquibase for real databases
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+      client:
+        config:
+          default:
+            connectTimeout: 2000
+            readTimeout: 5000
+            loggerLevel: basic
+    circuitbreaker:
+      resilience4j:
+        disableThreadPool: true   # keeps Feign calls on the request thread so the Authorization header is forwarded
+
+# Fixed addresses for the other services. Leave empty to discover them through Eureka.
+# Example without Eureka:
+#   EUREKA_ENABLED=false STUDENT_SERVICE_URL=http://localhost:8080 COURSE_SERVICE_URL=http://localhost:8082
+# url: ${STUDENT_SERVICE_URL:}, url: ${COURSE_SERVICE_URL:}
+clients:
+  student-service:
+    url: http://localhost:8081
+  course-service:
+    url: http://localhost:8082
+
+app:
+  events:
+    publisher: log               # log | kafka (write a Kafka EnrollmentEventPublisher and switch this)
+
+#eureka:
+#  client:
+#    enabled: ${EUREKA_ENABLED:true}
+#    service-url:
+#      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: ${spring.application.name}:${server.port}
+#
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: health,info
+#  endpoint:
+#    health:
+#      show-details: when-authorized
+#
+#springdoc:
+#  api-docs:
+#    path: /v3/api-docs
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    operations-sorter: method
+
+logging:
+  level:
+    com.studentmgmt.enrollment: INFO

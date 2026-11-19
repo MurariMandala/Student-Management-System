@@ -1,0 +1,99 @@
+### Enrollment Service requests for IntelliJ's built-in HTTP Client.
+### Needs the student-service (seed data) and course-service running.
+@baseUrl = http://localhost:8083
+
+### 1. Enroll student 1 in course 1 (expect 201)
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 1, "courseId": 1 }
+
+### 1b. Same request again (expect 409 duplicate)
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 1, "courseId": 1 }
+
+### 1c. Missing fields (expect 400 with field errors)
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{}
+
+### 1d. Inactive student 5 (expect 409)
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 5, "courseId": 1 }
+
+### 1e. Unknown student (expect 404)
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 99, "courseId": 1 }
+
+### 1f. Unknown course (expect 404)
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 1, "courseId": 99 }
+
+### 1g. Full course CS499 (expect 409 "is full")
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 1, "courseId": 7 }
+
+### 1h. DRAFT course PH310 (expect 409 "not open")
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 1, "courseId": 8 }
+
+### 2. Is student 1 enrolled in course 1?
+GET {{baseUrl}}/api/enrollments/check?studentId=1&courseId=1
+
+### 2b. Missing parameter (expect 400)
+GET {{baseUrl}}/api/enrollments/check?studentId=1
+
+### 3a. List everything
+GET {{baseUrl}}/api/enrollments
+
+### 3b. Roster of course 1 (student ids)
+GET {{baseUrl}}/api/enrollments?courseId=1&status=ENROLLED
+
+### 3c. One student's enrollments, newest first
+GET {{baseUrl}}/api/enrollments?studentId=1&sortBy=enrolledAt&direction=desc
+
+### 3d. Invalid status (expect 400)
+GET {{baseUrl}}/api/enrollments?status=BOGUS
+
+### 4. Student 1's courses with course details
+GET {{baseUrl}}/api/enrollments/student/1/courses
+
+### 5. Get one enrollment
+GET {{baseUrl}}/api/enrollments/1
+
+### 5b. Not found (expect 404)
+GET {{baseUrl}}/api/enrollments/999
+
+### 6. Drop enrollment 1 (expect 200, seat released)
+POST {{baseUrl}}/api/enrollments/1/drop
+
+### 6b. Drop again (expect 409, no second seat released)
+POST {{baseUrl}}/api/enrollments/1/drop
+
+### 6c. Re-enroll after drop (expect 201, same enrollment id)
+POST {{baseUrl}}/api/enrollments
+Content-Type: application/json
+
+{ "studentId": 1, "courseId": 1 }
+
+### 7. Complete an enrollment
+POST {{baseUrl}}/api/enrollments/1/complete
+
+### 8. Course side: verify the seat counter after the steps above
+GET http://localhost:8082/api/courses/1
+
+### 9. Health check
+GET {{baseUrl}}/actuator/health
