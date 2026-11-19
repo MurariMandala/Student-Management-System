@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kameshwari High School | Student Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --cream:#f9f6f0;
+      --ivory:#f2ede4;
+      --brown:#2c1a0e;
+      --warm:#8b5e3c;
+      --gold:#c9943a;
+      --accent:#e85d26;
+      --green:#2d6a4f;
+      --green-light:#52b788;
+      --red:#b5281f;
+      --blue:#1d4e89;
+      --yellow:#e9c46a;
+      --border:#ddd5c8;
+      --shadow:rgba(44,26,14,0.12);
+      --text:#2c1a0e;
+      --muted:#7a6a5a;
+    }
+
+    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+
+    /* ── Header ── */
+    header{
+      background:var(--brown);
+      padding:20px 40px;
+      display:flex;align-items:center;justify-content:space-between;
+      position:sticky;top:0;z-index:100;
+      box-shadow:0 4px 20px var(--shadow);
+    }
+    header h1{
+      font-family:'Playfair Display',serif;
+      font-size:24px;color:#f9f6f0;font-weight:700;
+      letter-spacing:0.5px;
+    }
+    header h1 span{color:var(--gold)}
+    header{background:linear-gradient(115deg,#173b32 0%,#245b49 58%,#2f6b56 100%);border-bottom:3px solid #d5ad58}
+    header h1{letter-spacing:.1px}
+    .header-meta{margin-top:6px;color:#e4d7b9;letter-spacing:1.5px}
+    .sidebar{background:linear-gradient(180deg,#f0f5ed 0%,#f6f2e8 100%)}
+    .nav-btn.active{background:#245b49}
+    .btn-primary{background:#245b49}
+    .btn-primary:hover{background:#173b32}
+    .btn-accent{background:#b9852e}
+    .btn-accent:hover{background:#986a20}
+    :root{--brown:#173b32;--warm:#39765e;--gold:#d5ad58;--accent:#b9852e;--ivory:#f0f5ed;--border:#d9e2d5;--text:#20352d;--muted:#6a7b70;--shadow:rgba(23,59,50,.10)}
+    .header-meta{font-size:12px;color:#a08060;letter-spacing:2px;text-transform:uppercase}
+
+    /* ── Layout ── */
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:calc(100vh - 72px)}
+
+    /* ── Sidebar ── */
+    .sidebar{
+      background:var(--ivory);
+      border-right:1px solid var(--border);
+      padding:28px 20px;
+      display:flex;flex-direction:column;gap:6px;
+    }
+    .nav-btn{
+      display:flex;align-items:center;gap:12px;
+      padding:12px 16px;border-radius:8px;
+      border:none;background:transparent;
+      font-family:'DM Sans',sans-serif;font-size:14px;
+      color:var(--muted);cursor:pointer;text-align:left;width:100%;
+      transition:all 0.2s;font-weight:500;
+    }
+    .nav-btn:hover{background:var(--border);color:var(--text)}
+    .nav-btn.active{background:var(--brown);color:#f9f6f0}
+    .nav-btn .icon{font-size:18px;width:24px;text-align:center}
+    .sidebar-divider{height:1px;background:var(--border);margin:10px 0}
+
+    /* ── Main ── */
+    main{padding:36px 40px;overflow-y:auto}
+
+    /* ── Section ── */
+    .section{display:none}
+    .section.active{display:block}
+
+    /* ── Stats ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+    .stat-card{
+      background:#fff;border:1px solid var(--border);
+      border-radius:12px;padding:22px;
+      box-shadow:0 2px 8px var(--shadow);
+      transition:transform 0.2s;
+      animation:fadeUp 0.4s ease both;
+    }
+    .stat-card:hover{transform:translateY(-2px)}
+    .stat-card:nth-child(2){animation-delay:.05s}
+    .stat-card:nth-child(3){animation-delay:.1s}
+    .stat-card:nth-child(4){animation-delay:.15s}
+    .stat-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--brown)}
+    .stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-top:4px}
+    .stat-icon{font-size:28px;float:right;opacity:0.15}
+    .stat-card.green .stat-num{color:var(--green)}
+    .stat-card.gold  .stat-num{color:var(--gold)}
+    .stat-card.red   .stat-num{color:var(--red)}
+
+    /* ── Table ── */
+    .card{background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 2px 8px var(--shadow);overflow:hidden;animation:fadeUp 0.4s ease both}
+    .card-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .card-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:600}
+
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .search-box{
+      display:flex;align-items:center;gap:8px;
+      background:var(--ivory);border:1px solid var(--border);
+      border-radius:8px;padding:8px 14px;flex:1;min-width:200px;
+    }
+    .search-box input{border:none;background:transparent;outline:none;font-size:14px;width:100%;font-family:'DM Sans',sans-serif;color:var(--text)}
+    .search-box span{color:var(--muted)}
+
+    select,input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date]{
+      font-family:'DM Sans',sans-serif;font-size:14px;
+      background:var(--ivory);border:1px solid var(--border);
+      border-radius:8px;padding:9px 13px;color:var(--text);outline:none;
+      transition:border-color 0.2s;
+    }
+    select:focus,input:focus{border-color:var(--warm)}
+
+    table{width:100%;border-collapse:collapse}
+    th{padding:14px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);background:var(--ivory);font-weight:600;border-bottom:1px solid var(--border)}
+    td{padding:14px 16px;font-size:14px;border-bottom:1px solid #f0ebe3;vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:#faf7f3}
+
+    .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:0.5px}
+    .badge.active{background:#d8f3dc;color:var(--green)}
+    .badge.inactive{background:#ffe8d6;color:#b5451b}
+    .badge.graduated{background:#dde5f0;color:var(--blue)}
+    .badge.suspended{background:#fce4e4;color:var(--red)}
+
+    .btn{
+      font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+      padding:9px 18px;border-radius:8px;border:none;cursor:pointer;
+      display:inline-flex;align-items:center;gap:6px;
+      transition:all 0.15s;letter-spacing:0.3px;
+    }
+    .btn-primary{background:var(--brown);color:#f9f6f0}
+    .btn-primary:hover{background:#3d2514}
+    .btn-accent{background:var(--accent);color:#fff}
+    .btn-accent:hover{background:#c94d1f}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
+    .btn-outline:hover{background:var(--ivory)}
+    .btn-danger{background:#fce4e4;color:var(--red)}
+    .btn-danger:hover{background:#f5c6c6}
+    .btn-sm{padding:5px 12px;font-size:12px}
+
+    /* ── Modal ── */
+    .modal-overlay{
+      display:none;position:fixed;inset:0;
+      background:rgba(44,26,14,0.5);z-index:200;
+      align-items:center;justify-content:center;
+      backdrop-filter:blur(2px);
+    }
+    .modal-overlay.open{display:flex}
+    .modal{
+      background:#fff;border-radius:16px;padding:0;
+      width:90%;max-width:600px;max-height:90vh;
+      overflow:hidden;display:flex;flex-direction:column;
+      box-shadow:0 20px 60px rgba(44,26,14,0.25);
+      animation:popIn 0.25s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes popIn{from{opacity:0;transform:scale(0.92)}to{opacity:1;transform:scale(1)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+    .modal-header{padding:22px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600}
+    .modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted);padding:4px;border-radius:6px;transition:background 0.15s}
+    .modal-close:hover{background:var(--ivory)}
+    .modal-body{padding:24px 28px;overflow-y:auto;flex:1}
+    .modal-footer{padding:18px 28px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .form-group{display:flex;flex-direction:column;gap:6px}
+    .form-group.full{grid-column:span 2}
+    label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+    .form-group input,.form-group select{width:100%}
+    .err-msg{font-size:12px;color:var(--red);display:none}
+
+    /* ── Toast ── */
+    .toast-container{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:999}
+    .toast{
+      background:var(--brown);color:#f9f6f0;
+      padding:14px 20px;border-radius:10px;
+      font-size:14px;font-weight:500;
+      box-shadow:0 4px 20px var(--shadow);
+      animation:slideIn 0.3s ease;
+      display:flex;align-items:center;gap:10px;
+    }
+    .toast.success{background:var(--green)}
+    .toast.error{background:var(--red)}
+    @keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+    /* ── Pagination ── */
+    .pagination{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-top:1px solid var(--border);font-size:13px;color:var(--muted)}
+    .pag-btns{display:flex;gap:6px}
+    .pag-btn{width:32px;height:32px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+    .pag-btn:hover,.pag-btn.active{background:var(--brown);color:#f9f6f0;border-color:var(--brown)}
+    .pag-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+    /* ── GPA bar ── */
+    .gpa-bar{width:80px;height:6px;background:#f0ebe3;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;margin-right:6px}
+    .gpa-fill{height:100%;border-radius:3px;transition:width 0.4s}
+    .gpa-good{background:var(--green-light)}
+    .gpa-mid{background:var(--gold)}
+    .gpa-low{background:var(--accent)}
+
+    /* ── Empty state ── */
+    .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+    .empty .e-icon{font-size:48px;margin-bottom:12px;opacity:0.3}
+    .empty p{font-size:14px}
+
+    /* ── Loading ── */
+    .loading{text-align:center;padding:40px;color:var(--muted);font-size:14px}
+    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--warm);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 12px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* ── Detail view ── */
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .detail-item label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600}
+    .detail-item .val{font-size:15px;color:var(--text);margin-top:3px;font-weight:500}
+    .detail-item.full{grid-column:span 2}
+
+    /* ── Responsive ── */
+    @media(max-width:900px){
+      .layout{grid-template-columns:1fr}
+      .sidebar{display:flex;flex-direction:row;overflow-x:auto;padding:12px}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .form-grid{grid-template-columns:1fr}
+      .form-group.full{grid-column:span 1}
+    }
+
+
+    /* ── Final UI polish ── */
+    html{scroll-behavior:smooth}
+    body{background:linear-gradient(135deg,#f8f6f1 0%,#f4efe7 100%);line-height:1.5}
+    header{padding:18px clamp(18px,3vw,40px);gap:18px}
+    header h1{font-size:clamp(21px,2vw,27px)}
+    header>div:last-child{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);padding:9px 13px;border-radius:999px;white-space:nowrap}
+    header>div:last-child:before{content:"";width:8px;height:8px;border-radius:50%;background:#52b788;box-shadow:0 0 0 4px rgba(82,183,136,.13)}
+    .layout{min-height:calc(100vh - 76px)}
+    .sidebar{position:sticky;top:76px;height:calc(100vh - 76px);align-self:start}
+    .nav-btn{border-radius:10px;padding:13px 15px}
+    main{min-width:0;padding:clamp(20px,3vw,40px)}
+    .section>div:first-child h2{letter-spacing:-.45px}
+    .stat-card,.card{border-color:#e7dfd3;box-shadow:0 5px 20px rgba(44,26,14,.045)}
+    .stat-card{border-radius:15px;padding:23px;position:relative;overflow:hidden}
+    .stat-card:after{content:"";position:absolute;right:-24px;bottom:-34px;width:95px;height:95px;border-radius:50%;background:currentColor;opacity:.035}
+    .card{border-radius:15px}
+    .card-header{gap:14px;flex-wrap:wrap}
+    .search-box,select,input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date]{border-radius:9px}
+    .search-box:focus-within{border-color:var(--warm);box-shadow:0 0 0 3px rgba(139,94,60,.09)}
+    .btn{border-radius:9px;min-height:36px}
+    .btn-primary{box-shadow:0 3px 8px rgba(44,26,14,.12)}
+    .btn:focus-visible,.nav-btn:focus-visible,.pag-btn:focus-visible{outline:3px solid rgba(201,148,58,.5);outline-offset:2px}
+    .table-wrap{width:100%;overflow-x:auto}
+    table{min-width:720px}
+    th{white-space:nowrap}
+    td{overflow-wrap:anywhere}
+    .modal{border:1px solid rgba(255,255,255,.6)}
+    .form-group input,.form-group select{min-height:42px}
+    .student-footer{margin-left:260px;padding:20px 40px 26px;border-top:1px solid var(--border);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;background:rgba(255,255,255,.45)}
+    .student-footer strong{color:var(--brown);font-weight:700}
+    .student-footer .footer-mark{color:var(--warm);letter-spacing:.2px}
+    @media(max-width:900px){
+      .sidebar{position:relative;top:auto;height:auto}
+      .student-footer{margin-left:0;padding:18px 22px}
+      .layout{min-height:auto}
+      main{padding:22px}
+    }
+    @media(max-width:600px){
+      header{align-items:flex-start;flex-direction:column;padding:16px 18px}
+      header>div:last-child{font-size:11px;padding:7px 10px}
+      .sidebar{gap:4px}
+      .nav-btn{width:auto;white-space:nowrap;padding:10px 12px;font-size:12px}
+      .nav-btn .icon{font-size:15px;width:auto}
+      .stats-grid{gap:10px}
+      .stat-card{padding:16px}
+      .stat-num{font-size:29px}
+      .stat-label{font-size:10px;letter-spacing:1px}
+      .card-header{padding:16px}
+      .toolbar{width:100%}
+      .toolbar select{flex:1;min-width:120px}
+      .student-footer{align-items:flex-start;flex-direction:column;padding:16px 20px}
+      .form-grid{gap:13px}
+      .modal{width:calc(100% - 24px);max-height:92vh}
+      .modal-header,.modal-body,.modal-footer{padding-left:18px;padding-right:18px}
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🎓 Kameshwari <span>High School</span></h1>
+    <div class="header-meta">By Nagar · Sircilla · 505301</div>
+  </div>
+  <div style="font-size:13px;color:#a08060">📡 School Portal <span style="display:block;text-align:right;font-size:11px;margin-top:4px">Learning · Growth · Excellence</span></div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar">
+    <button class="nav-btn active" onclick="showSection('dashboard')">
+      <span class="icon">🏫</span> School Overview
+    </button>
+    <button class="nav-btn" onclick="showSection('students')">
+      <span class="icon">👩‍🎓</span> Student Directory
+    </button>
+    <button class="nav-btn" onclick="showSection('add')">
+      <span class="icon">📝</span> Enroll Student
+    </button>
+    <div class="sidebar-divider"></div>
+    <button class="nav-btn" onclick="showSection('top')">
+      <span class="icon">🏆</span> Academic Achievers
+    </button>
+    <button class="nav-btn" onclick="showSection('search')">
+      <span class="icon">📚</span> Find a Student
+    </button>
+  </nav>
+
+  <main>
+    <!-- DASHBOARD -->
+    <div id="sec-dashboard" class="section active">
+      <div style="margin-bottom:24px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700">Welcome to Your School Portal</h2>
+        <p style="color:var(--muted);font-size:14px;margin-top:4px">A live view of student enrollment, progress, and achievements</p>
+      </div>
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="loading"><div class="spinner"></div></div></div>
+        <div class="stat-card green"><div class="loading"></div></div>
+        <div class="stat-card gold"><div class="loading"></div></div>
+        <div class="stat-card red"><div class="loading"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">Recently Enrolled Students</span>
+          <button class="btn btn-primary btn-sm" onclick="showSection('students')">View Student Directory →</button>
+        </div>
+        <div id="recent-table"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+      </div>
+    </div>
+
+    <!-- ALL STUDENTS -->
+    <div id="sec-students" class="section">
+      <div class="card-header" style="padding:0 0 20px 0">
+        <h2 style="font-family:'Playfair Display',serif;font-size:24px">Student Directory</h2>
+        <button class="btn btn-accent" onclick="openAddModal()">＋ Enroll Student</button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="search-box" style="max-width:340px">
+            <span>🔍</span>
+            <input type="text" id="search-input" placeholder="Find a student by name, email, or course..." oninput="debounceSearch(this.value)"/>
+          </div>
+          <div class="toolbar">
+            <select id="filter-dept" onchange="applyFilter()"><option value="">All Departments</option></select>
+            <select id="filter-year" onchange="applyFilter()">
+              <option value="">All Years</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option>
+            </select>
+            <select id="filter-status" onchange="applyFilter()">
+              <option value="">All Status</option>
+              <option>ACTIVE</option><option>INACTIVE</option><option>GRADUATED</option><option>SUSPENDED</option>
+            </select>
+          </div>
+        </div>
+        <div id="students-table"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </div>
+
+    <!-- ADD STUDENT -->
+    <div id="sec-add" class="section">
+      <div style="max-width:700px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:24px;margin-bottom:24px">Add New Student</h2>
+        <div class="card">
+          <div class="modal-body">
+            <div id="add-form-container"></div>
+            <div style="display:flex;gap:10px;margin-top:24px;justify-content:flex-end">
+              <button class="btn btn-outline" onclick="resetAddForm()">Reset</button>
+              <button class="btn btn-accent" onclick="submitAddForm()">Save Student</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP STUDENTS -->
+    <div id="sec-top" class="section">
+      <div style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:24px">Academic Achievers</h2>
+          <p style="color:var(--muted);font-size:14px;margin-top:4px">Celebrating students who are doing their best</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label style="font-size:13px;color:var(--muted)">Min GPA:</label>
+          <input type="number" id="min-gpa" value="8.0" step="0.1" min="0" max="10" style="width:80px" onchange="loadTopStudents()"/>
+        </div>
+      </div>
+      <div class="card">
+        <div id="top-table"><div class="loading"><div class="spinner"></div><p>Loading...</p></div></div>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div id="sec-search" class="section">
+      <div style="margin-bottom:24px">
+        <h2 style="font-family:'Playfair Display',serif;font-size:24px">Find a Student</h2>
+      </div>
+      <div class="card" style="padding:24px;margin-bottom:20px">
+        <div class="search-box" style="max-width:100%">
+          <span style="font-size:20px">🔍</span>
+          <input type="text" id="adv-search" placeholder="Enter student name, email, course, or department..." style="font-size:16px;padding:4px 0"/>
+        </div>
+        <button class="btn btn-primary" style="margin-top:14px" onclick="doAdvSearch()">Search</button>
+      </div>
+      <div class="card">
+        <div id="adv-results"><div class="empty"><div class="e-icon">🔍</div><p>Enter a search term above</p></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+<footer class="student-footer">
+  <span>© <span id="footer-year"></span> Kameshwari High School · Student Portal<br><span style="display:inline-block;margin-top:5px">By Nagar, Sircilla – 505301</span></span>
+  <span class="footer-mark">Designed &amp; developed by <strong>Murari Mandala</strong><br><span style="display:inline-block;margin-top:5px">☎ 9666689168</span></span>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Student</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- Toasts -->
+<div class="toast-container" id="toasts"></div>
+
+<script>
+  const API = 'http://localhost:8081/api/students';
+  let currentPage = 0, totalPages = 0, currentQuery = '', currentDept = '', currentYear = '', currentStatus = '';
+  let searchTimer;
+  let departments = new Set();
+  let editingId = null;
+
+  // ── API helpers ────────────────────────────────────────────
+  async function api(path, opts = {}) {
+    try {
+      const res = await fetch(API + path, {
+        headers: {'Content-Type': 'application/json'},
+        ...opts
+      });
+      return await res.json();
+    } catch (e) {
+      showToast('Cannot reach the Spring Boot API. Is it running on port 8081?', 'error');
+      throw e;
+    }
+  }
+
+  // ── Toast ──────────────────────────────────────────────────
+  function showToast(msg, type = '') {
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.textContent = (type === 'success' ? '✓ ' : type === 'error' ? '✕ ' : 'ℹ ') + msg;
+    document.getElementById('toasts').appendChild(t);
+    setTimeout(() => t.remove(), 3500);
+  }
+
+  // ── Navigation ─────────────────────────────────────────────
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('sec-' + id).classList.add('active');
+    const idx = ['dashboard','students','add','top','search'].indexOf(id);
+    document.querySelectorAll('.nav-btn')[idx]?.classList.add('active');
+
+    if (id === 'dashboard') loadDashboard();
+    else if (id === 'students') loadStudents();
+    else if (id === 'add') renderAddForm();
+    else if (id === 'top') loadTopStudents();
+  }
+
+  // ── Dashboard ─────────────────────────────────────────────
+  async function loadDashboard() {
+    try {
+      const r = await api('/summary');
+      const s = r.data;
+      document.getElementById('stats-grid').innerHTML = `
+      <div class="stat-card"><span class="stat-icon">🎓</span><div class="stat-num">${s.totalStudents}</div><div class="stat-label">Total Students</div></div>
+      <div class="stat-card green"><span class="stat-icon">✅</span><div class="stat-num">${s.activeStudents}</div><div class="stat-label">Active</div></div>
+      <div class="stat-card gold"><span class="stat-icon">📜</span><div class="stat-num">${s.graduatedStudents}</div><div class="stat-label">Graduated</div></div>
+      <div class="stat-card red"><span class="stat-icon">⚠️</span><div class="stat-num">${s.inactiveStudents + s.suspendedStudents}</div><div class="stat-label">Inactive / Suspended</div></div>
+    `;
+      // Recent students
+      const r2 = await api('?page=0&size=5&sortBy=createdAt&direction=desc');
+      renderStudentTable('recent-table', r2.data.content, false);
+    } catch(e){}
+  }
+
+  // ── Students ──────────────────────────────────────────────
+  async function loadStudents(page = 0) {
+    currentPage = page;
+    let path = `?page=${page}&size=8&sortBy=id&direction=asc`;
+    if (currentQuery) path = `/search?query=${encodeURIComponent(currentQuery)}&page=${page}&size=8`;
+    else if (currentDept || currentYear || currentStatus) {
+      path = `/filter?page=${page}&size=8` +
+              (currentDept ? `&department=${encodeURIComponent(currentDept)}` : '') +
+              (currentYear ? `&year=${currentYear}` : '') +
+              (currentStatus ? `&status=${currentStatus}` : '');
+    }
+    try {
+      const r = await api(path);
+      const d = r.data;
+      renderStudentTable('students-table', d.content, true);
+      renderPagination(d.totalPages, d.number, d.totalElements);
+      // collect departments
+      d.content.forEach(s => s.department && departments.add(s.department));
+      populateDeptFilter();
+    } catch(e){}
+  }
+
+  function renderStudentTable(containerId, students, actions) {
+    if (!students || students.length === 0) {
+      document.getElementById(containerId).innerHTML = `<div class="empty"><div class="e-icon">🎓</div><p>No students found</p></div>`;
+      return;
+    }
+    document.getElementById(containerId).innerHTML = `
+    <table>
+      <thead><tr>
+        <th>Name</th><th>Email</th><th>Department</th><th>Year</th><th>GPA</th><th>Status</th>${actions ? '<th>Actions</th>' : ''}
+      </tr></thead>
+      <tbody>${students.map(s => `
+        <tr>
+          <td><strong>${s.firstName} ${s.lastName}</strong><br><span style="color:var(--muted);font-size:12px">#${s.id}</span></td>
+          <td style="font-size:13px">${s.email}</td>
+          <td>${s.department}</td>
+          <td style="text-align:center">${s.year}</td>
+          <td>
+            <div class="gpa-bar"><div class="gpa-fill ${s.gpa >= 8 ? 'gpa-good' : s.gpa >= 6 ? 'gpa-mid' : 'gpa-low'}" style="width:${(s.gpa/10)*100}%"></div></div>
+            ${s.gpa?.toFixed(1) ?? '—'}
+          </td>
+          <td><span class="badge ${s.status?.toLowerCase()}">${s.status}</span></td>
+          ${actions ? `<td>
+            <button class="btn btn-outline btn-sm" onclick="viewStudent(${s.id})">View</button>
+            <button class="btn btn-outline btn-sm" onclick="editStudent(${s.id})">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteStudent(${s.id},'${s.firstName} ${s.lastName}')">Del</button>
+          </td>` : ''}
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  function renderPagination(total, current, totalEls) {
+    totalPages = total;
+    let html = `<span>${totalEls} students</span><div class="pag-btns">`;
+    html += `<button class="pag-btn" ${current===0?'disabled':''} onclick="loadStudents(${current-1})">‹</button>`;
+    for (let i = 0; i < total; i++) {
+      if (total > 7 && i > 1 && i < total-2 && Math.abs(i-current) > 1) { if(i===2||i===total-3) html+='<span style="padding:0 4px">…</span>'; continue; }
+      html += `<button class="pag-btn ${i===current?'active':''}" onclick="loadStudents(${i})">${i+1}</button>`;
+    }
+    html += `<button class="pag-btn" ${current===total-1?'disabled':''} onclick="loadStudents(${current+1})">›</button></div>`;
+    document.getElementById('pagination').innerHTML = html;
+  }
+
+  function populateDeptFilter() {
+    const sel = document.getElementById('filter-dept');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">All Departments</option>';
+    departments.forEach(d => sel.innerHTML += `<option ${d===cur?'selected':''}>${d}</option>`);
+  }
+
+  // ── Search & Filter ────────────────────────────────────────
+  function debounceSearch(val) {
+    clearTimeout(searchTimer);
+    currentQuery = val; currentDept=''; currentYear=''; currentStatus='';
+    searchTimer = setTimeout(() => loadStudents(0), 350);
+  }
+
+  function applyFilter() {
+    currentQuery = '';
+    currentDept = document.getElementById('filter-dept').value;
+    currentYear = document.getElementById('filter-year').value;
+    currentStatus = document.getElementById('filter-status').value;
+    loadStudents(0);
+  }
+
+  async function doAdvSearch() {
+    const q = document.getElementById('adv-search').value.trim();
+    if (!q) return;
+    try {
+      const r = await api(`/search?query=${encodeURIComponent(q)}&page=0&size=20`);
+      renderStudentTable('adv-results', r.data.content, true);
+    } catch(e){}
+  }
+
+  // ── View / Edit / Delete ───────────────────────────────────
+  async function viewStudent(id) {
+    try {
+      const r = await api(`/${id}`);
+      const s = r.data;
+      document.getElementById('modal-title').textContent = `${s.firstName} ${s.lastName}`;
+      document.getElementById('modal-body').innerHTML = `
+      <div class="detail-grid">
+        <div class="detail-item"><label>Email</label><div class="val">${s.email}</div></div>
+        <div class="detail-item"><label>Phone</label><div class="val">${s.phone}</div></div>
+        <div class="detail-item"><label>Date of Birth</label><div class="val">${s.dateOfBirth} (Age ${s.age})</div></div>
+        <div class="detail-item"><label>Status</label><div class="val"><span class="badge ${s.status?.toLowerCase()}">${s.status}</span></div></div>
+        <div class="detail-item"><label>Course</label><div class="val">${s.course}</div></div>
+        <div class="detail-item"><label>Department</label><div class="val">${s.department}</div></div>
+        <div class="detail-item"><label>Year</label><div class="val">Year ${s.year}</div></div>
+        <div class="detail-item"><label>GPA</label><div class="val">${s.gpa?.toFixed(2) ?? '—'} / 10.0</div></div>
+        <div class="detail-item full"><label>Address</label><div class="val">${s.address || '—'}</div></div>
+      </div>`;
+      document.getElementById('modal-footer').innerHTML = `
+      <button class="btn btn-outline" onclick="closeModal()">Close</button>
+      <button class="btn btn-primary" onclick="closeModal();editStudent(${s.id})">Edit</button>`;
+      openModal();
+    } catch(e){}
+  }
+
+  async function editStudent(id) {
+    try {
+      const r = await api(`/${id}`);
+      const s = r.data;
+      editingId = id;
+      document.getElementById('modal-title').textContent = 'Edit Student';
+      document.getElementById('modal-body').innerHTML = buildFormHTML(s);
+      document.getElementById('modal-footer').innerHTML = `
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-accent" onclick="submitEdit()">Save Changes</button>`;
+      openModal();
+    } catch(e){}
+  }
+
+  async function submitEdit() {
+    const data = collectFormData('modal-body');
+    if (!data) return;
+    try {
+      const r = await api(`/${editingId}`, {method:'PUT', body:JSON.stringify(data)});
+      if (r.success) {
+        showToast('Student updated!', 'success');
+        closeModal(); loadStudents(currentPage);
+      } else showToast(r.message, 'error');
+    } catch(e){}
+  }
+
+  async function deleteStudent(id, name) {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    try {
+      const r = await api(`/${id}`, {method:'DELETE'});
+      if (r.success) { showToast('Student deleted', 'success'); loadStudents(currentPage); }
+      else showToast(r.message, 'error');
+    } catch(e){}
+  }
+
+  // ── Add Form ───────────────────────────────────────────────
+  function renderAddForm() {
+    document.getElementById('add-form-container').innerHTML = buildFormHTML();
+  }
+
+  function resetAddForm() { renderAddForm(); }
+
+  async function submitAddForm() {
+    const data = collectFormData('add-form-container');
+    if (!data) return;
+    try {
+      const r = await api('', {method:'POST', body:JSON.stringify(data)});
+      if (r.success) {
+        showToast('Student added successfully!', 'success');
+        renderAddForm();
+        showSection('students');
+      } else showToast(r.message || 'Failed to add student', 'error');
+    } catch(e){}
+  }
+
+  function openAddModal() {
+    editingId = null;
+    document.getElementById('modal-title').textContent = 'Add New Student';
+    document.getElementById('modal-body').innerHTML = buildFormHTML();
+    document.getElementById('modal-footer').innerHTML = `
+    <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+    <button class="btn btn-accent" onclick="submitFromModal()">Add Student</button>`;
+    openModal();
+  }
+
+  async function submitFromModal() {
+    const data = collectFormData('modal-body');
+    if (!data) return;
+    try {
+      const r = await api('', {method:'POST', body:JSON.stringify(data)});
+      if (r.success) {
+        showToast('Student added!', 'success');
+        closeModal(); loadStudents(currentPage);
+      } else showToast(r.message, 'error');
+    } catch(e){}
+  }
+
+  function buildFormHTML(s = {}) {
+    return `<div class="form-grid">
+    <div class="form-group"><label>First Name *</label><input id="f-firstName" value="${s.firstName||''}" placeholder="Aarav"/></div>
+    <div class="form-group"><label>Last Name *</label><input id="f-lastName" value="${s.lastName||''}" placeholder="Sharma"/></div>
+    <div class="form-group"><label>Email *</label><input type="email" id="f-email" value="${s.email||''}" placeholder="student@uni.edu"/></div>
+    <div class="form-group"><label>Phone *</label><input type="tel" id="f-phone" value="${s.phone||''}" placeholder="9876543210"/></div>
+    <div class="form-group"><label>Date of Birth *</label><input type="date" id="f-dob" value="${s.dateOfBirth||''}"/></div>
+    <div class="form-group"><label>Year *</label>
+      <select id="f-year">${[1,2,3,4,5,6].map(y=>`<option ${s.year==y?'selected':''}>${y}</option>`).join('')}</select>
+    </div>
+    <div class="form-group"><label>Course *</label><input id="f-course" value="${s.course||''}" placeholder="B.Tech Computer Science"/></div>
+    <div class="form-group"><label>Department *</label><input id="f-dept" value="${s.department||''}" placeholder="Engineering"/></div>
+    <div class="form-group"><label>GPA (0–10)</label><input type="number" step="0.1" min="0" max="10" id="f-gpa" value="${s.gpa||''}"/></div>
+    <div class="form-group"><label>Status</label>
+      <select id="f-status">
+        <option ${s.status==='ACTIVE'?'selected':''}>ACTIVE</option>
+        <option ${s.status==='INACTIVE'?'selected':''}>INACTIVE</option>
+        <option ${s.status==='GRADUATED'?'selected':''}>GRADUATED</option>
+        <option ${s.status==='SUSPENDED'?'selected':''}>SUSPENDED</option>
+      </select>
+    </div>
+    <div class="form-group full"><label>Address</label><input id="f-address" value="${s.address||''}" placeholder="City, State"/></div>
+  </div>`;
+  }
+
+  function collectFormData(containerId) {
+    const g = id => document.getElementById(id)?.value?.trim();
+    const firstName = g('f-firstName'), lastName = g('f-lastName'), email = g('f-email'), phone = g('f-phone'), dob = g('f-dob');
+    if (!firstName || !lastName || !email || !phone || !dob) { showToast('Please fill in all required fields', 'error'); return null; }
+    return {
+      firstName, lastName, email, phone,
+      dateOfBirth: dob,
+      course: g('f-course'),
+      department: g('f-dept'),
+      year: parseInt(g('f-year')||'1'),
+      gpa: g('f-gpa') ? parseFloat(g('f-gpa')) : null,
+      status: g('f-status') || 'ACTIVE',
+      address: g('f-address')
+    };
+  }
+
+  // ── Top Students ───────────────────────────────────────────
+  async function loadTopStudents() {
+    const minGpa = document.getElementById('min-gpa')?.value || '8.0';
+    try {
+      const r = await api(`/top?minGpa=${minGpa}`);
+      const students = r.data;
+      if (!students?.length) { document.getElementById('top-table').innerHTML = `<div class="empty"><div class="e-icon">⭐</div><p>No students above GPA ${minGpa}</p></div>`; return; }
+      renderStudentTable('top-table', students, true);
+    } catch(e){}
+  }
+
+  // ── Modal helpers ──────────────────────────────────────────
+  function openModal()  { document.getElementById('modal-overlay').classList.add('open') }
+  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); editingId=null }
+  document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal() });
+
+  // ── Init ───────────────────────────────────────────────────
+  document.getElementById('footer-year').textContent = new Date().getFullYear();
+  loadDashboard();
+</script>
+</body>
+</html>
